@@ -1,5 +1,4 @@
 
-//#include "../repos/tinyfsm/include/tinyfsm.hpp"
 
 #ifndef ARDUINO_H
   #define ARDUINO_H
@@ -13,16 +12,9 @@
 using namespace arduino;
 //}
 
-int main()
-{
-  return 0;
-}
-
 enum ButtonEvent
 {
   NO_TRANSITION_EVENT,
-  NOTPRESSED,
-  PRESSED,
   SHORT_PRESS,
   LONG_PRESS
 };
@@ -57,7 +49,7 @@ public:
       m_last_statechange_ms = millis(); //reset the debouncing timer
     }
 
-    int time_in_current_state = (current_time_in_ms - m_last_statechange_ms);
+    uint32_t time_in_current_state = (current_time_in_ms - m_last_statechange_ms);
 
     if (time_in_current_state > m_debouncetime_ms)
     {
@@ -69,16 +61,17 @@ public:
       }
     }
   }
-  ButtonEvent check_button_event()   // event should be state transition. need a state for button press
+  ButtonEvent check_button_event()
   {
-    // if the switch has been pressed long enough to register a long press
+    // if the switch is not pressed, no event
     if (m_isPressed == 0)
     {
       if (Event != NO_TRANSITION_EVENT)
       {
-        Event == NO_TRANSITION_EVENT;
+        Event = NO_TRANSITION_EVENT;
       }
     }
+
     uint32_t current_time_in_ms = millis();
     int time_in_current_state = (current_time_in_ms - m_last_statechange_ms);
 
@@ -86,8 +79,12 @@ public:
     {
       Event = LONG_PRESS;
     }
-    else if (Event == NOTPRESSED || Event)
-
+    else if (Event != SHORT_PRESS && time_in_current_state > short_press_ms){
+      Event = SHORT_PRESS;
+    }
+    else{  // if we already reported the button press, then longer pushing should have no effect
+      Event = NO_TRANSITION_EVENT;
+    }
     return Event;
   }
 
@@ -98,6 +95,19 @@ public:
     return current_event;
   }
 };
+
+
+int main()
+{
+  start_time = std::chrono::system_clock::now();
+  Button my_button(1);
+  for(int i = 1; i<100;i++){
+  my_button.poll_and_return_event();
+  std::cout << millis()<< std::endl;
+  }
+  return 0;
+}
+
 
 /*
 
