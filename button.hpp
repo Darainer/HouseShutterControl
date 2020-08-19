@@ -1,4 +1,9 @@
-#include <arduino.h>
+#ifndef BUTTON_H
+#define BUTTON_H
+
+#include "arduino.h"
+
+using namespace arduino;
 
 enum ButtonEvent
 {
@@ -81,3 +86,4 @@ public:
     return current_event;
   }
 };
+#endif

@@ -1,3 +1,7 @@
+#ifndef ARDUINO_H
+#define ARDUINO_H
+
+
 #include <chrono>
 #include <iostream>
 #include <vector>
@@ -94,3 +98,5 @@ namespace arduino
 // }
 
 arduino::serial Serial; //global object ala std::cout
+
+#endif
