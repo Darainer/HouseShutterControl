@@ -25,8 +25,8 @@ class Button
 {
 private:
   uint32_t m_uCPin;
-  ButtonStatus m_ButtonStatus_previous;
-  ButtonStatus m_ButtonStatus;
+  ButtonStatus m_ButtonStatus_previous{NOT_PRESSED};
+  ButtonStatus m_ButtonStatus{NOT_PRESSED};
   bool m_SwitchisPressed{true};
   bool m_LastReadState{false};
   uint32_t m_debouncetime_ms{25};
@@ -50,16 +50,14 @@ private:
     {
       // whatever the reading is at, it's been there for longer than the debounce
       // delay, so take it as the actual current state
-      if (raw_switch_reading != m_SwitchisPressed)
-      {
         m_SwitchisPressed = raw_switch_reading;
-      }
     }
     m_LastReadState = raw_switch_reading;
   }
 
   void updateButtonState()
   {
+    //simple state machine for the button
     m_ButtonStatus_previous = m_ButtonStatus;
     uint32_t current_time_in_ms = millis();
     int time_in_current_state = (current_time_in_ms - m_last_statechange_ms);
@@ -71,7 +69,7 @@ private:
     else if (m_SwitchisPressed && time_in_current_state > short_press_ms){
       m_ButtonStatus = SHORT_PRESS;
     }
-    else if(time_in_current_state > m_debouncetime_ms){  //transition to off
+    else if(!m_SwitchisPressed && time_in_current_state > m_debouncetime_ms){  //transition to off
       //
       m_ButtonStatus = NOT_PRESSED;
     }
