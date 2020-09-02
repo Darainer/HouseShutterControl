@@ -1,7 +1,6 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-
 #include "arduino.h"
 
 using namespace arduino;
@@ -31,8 +30,8 @@ private:
   bool m_LastReadState{false};
   uint32_t m_debouncetime_ms{25};
   uint32_t m_last_statechange_ms{0};
-  uint32_t short_press_ms{25};
-  uint32_t long_press_ms{1000};
+  uint32_t m_short_press_ms{25};
+  uint32_t m_long_press_ms{1000};
   bool m_switch_invert{false};
 
   void read_and_debounce_switch()
@@ -62,11 +61,11 @@ private:
     uint32_t current_time_in_ms = millis();
     int time_in_current_state = (current_time_in_ms - m_last_statechange_ms);
 
-    if (m_SwitchisPressed && time_in_current_state > long_press_ms)
+    if (m_SwitchisPressed && time_in_current_state > m_long_press_ms)
     {
       m_ButtonStatus = LONG_PRESS;
     }
-    else if (m_SwitchisPressed && time_in_current_state > short_press_ms){
+    else if (m_SwitchisPressed && time_in_current_state > m_short_press_ms){
       m_ButtonStatus = SHORT_PRESS;
     }
     else if(!m_SwitchisPressed && time_in_current_state > m_debouncetime_ms){  //transition to off
@@ -96,6 +95,11 @@ public:
   {
     m_uCPin = pin;
     m_last_statechange_ms = millis();
+  }
+  Button(uint32_t pin,   uint32_t debouncetime, uint32_t shortpress_time, uint32_t longpress_time){
+    m_debouncetime_ms = debouncetime;
+    m_short_press_ms = shortpress_time;
+    m_long_press_ms = longpress_time;
   }
 
   ButtonEvent poll_and_return_event()
