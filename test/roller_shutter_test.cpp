@@ -20,6 +20,16 @@ TEST(update, HandlesZeroInput) {
 
 }
 
+TEST(shutter_system_instantiation, HandlesZeroInput) {
+  // test update function call
+  uint32_t pin_button{3};
+  uint32_t relay_pin1{1}, relay_pin2{2};
+  std::vector<std::array<uint32_t,3>> input_shutter{{pin_button,relay_pin1,relay_pin2}, {4,5,6}};
+
+  ASSERT_NO_THROW(Shutter_system myshutters(input_shutter));
+
+}
+
 int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
