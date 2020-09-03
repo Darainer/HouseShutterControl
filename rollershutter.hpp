@@ -58,17 +58,42 @@ class relay{
     }
 };
 
+enum shutter_position{
+  FULLY_CLOSED,
+  PARTIALLY_CLOSED,
+  FULLY_OPEN,
+};
+enum shutter_motion{
+  OPENING,
+  CLOSING,
+  STATIONARY,
+};
+
 class shutter{
     private:
         Button* m_button;// todo: need to call constructor with the pin 
         // std::shared_ptr<Button> m_master_button;  todo add master button 
         relay* m_relay;
-    
+        shutter_position m_position{PARTIALLY_CLOSED};  //we cant know where it is at the start
+        shutter_motion m_motion{STATIONARY};
+
     public:
         shutter(uint32_t button_pin, uint32_t relay_pin1, uint32_t relay_pin2 ){ 
             uint32_t pin{button_pin};
             m_button = new Button(pin);
             m_relay = new relay(relay_pin1, relay_pin2);
+            m_relay->set_off();
+        }
+        void poll_inputs_and_update(){
+            // add limit switch check here eg...
+                //if (limitswitch) 
+                    //m_relay->set_off();
+            ButtonEvent Event = m_button->poll_and_return_event();
+
+            if(m_position== FULLY_CLOSED && Event == ButtonEvent::TRANSITION_TO_SHORT_PRESS){
+                m_relay->set_positive();
+                m_motion = OPENING;
+            }
         }
         ~shutter(){
             delete m_button;
