@@ -1,5 +1,7 @@
-#include "../button.hpp"
 #include "../googletest/googletest/include/gtest/gtest.h"
+#include "arduino_mock.h"
+#define unit_test
+#include "../button.hpp"
 
 void fixture_shortbuttonPress(){
   std::vector<int> a_short_press{0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0,0,0};

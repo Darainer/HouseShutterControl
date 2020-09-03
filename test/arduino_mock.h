@@ -1,10 +1,15 @@
+#pragma once
+
 #ifndef ARDUINO_H
 #define ARDUINO_H
 
-
+//std dependencies
 #include <chrono>
+#include <thread>
 #include <iostream>
 #include <vector>
+
+// preprocessor definitions used in the arduino header
 #define LOW false
 #define HIGH true
 #define INPUT true        // logical flag for setting to read/write mode
@@ -14,7 +19,7 @@
 #define byte uint8_t
 
 
-
+//put all the functions in the namespace which allows the 
 namespace arduino
 {
     static int global_read_counter{0};
@@ -56,12 +61,7 @@ namespace arduino
     void delay(int time_ms)  
     {
         //processor blocking delay function
-        auto delay_start = std::chrono::system_clock::now();
-        auto current_time = delay_start;
-        //wait time
-        while( std::chrono::duration_cast<std::chrono::milliseconds>(current_time - delay_start).count() < time_ms ){
-            current_time = std::chrono::system_clock::now();
-        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(time_ms));
     }
     void pinMode(byte pin, bool mode)
     {
@@ -90,6 +90,8 @@ namespace arduino
         }
     };
 
+
+serial Serial; //global object in arduino namespace ala std::cout
 } // namespace arduino
 
 // Class mock_read{
@@ -98,7 +100,5 @@ namespace arduino
 //     static std::vector<bool> mock_button_input{0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0}; 
 //     ~mock_read{}
 // }
-
-arduino::serial Serial; //global object ala std::cout
 
 #endif

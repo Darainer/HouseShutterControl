@@ -1,9 +1,12 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "arduino.h"
-
-using namespace arduino;
+#ifdef unit_test
+  //#include "arduino_mock.h"
+  using namespace arduino;
+#else
+  #include "arduino.h"
+#endif
 
 enum ButtonEvent
 {
