@@ -1,5 +1,5 @@
 #ifndef BUTTON_H
-#define BUTTON_H
+  #define BUTTON_H
 
 #ifdef unit_test
   //#include "arduino_mock.h"
