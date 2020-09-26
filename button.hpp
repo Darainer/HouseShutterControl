@@ -1,7 +1,7 @@
 #ifndef BUTTON_H
   #define BUTTON_H
 
-#ifdef unit_test
+#ifdef Arduino_mock_unit_test
   //#include "arduino_mock.h"
   using namespace arduino;
 #else

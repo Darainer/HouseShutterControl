@@ -1,6 +1,6 @@
 #include "../googletest/googletest/include/gtest/gtest.h"
 #include "arduino_mock.h"
-#define unit_test
+// #define Arduino_mock_unit_test
 #include "../rollershutter.hpp"
 
 // Tests that button instantiates without error

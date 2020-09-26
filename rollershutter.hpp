@@ -1,7 +1,7 @@
 #ifndef ROLLERSHUTTER_H
 #define ROLLERSHUTTER_H
 
-#ifdef unit_test
+#ifdef Arduino_mock_unit_test
   //#include "arduino_mock.h"
   using namespace arduino;
 #else
@@ -117,19 +117,31 @@ class Shutter_system{
     private:
     std::vector<shutter*> All_shutters;
     Button* SystemMasterSwitch;
+    std::vector<std::array<uint32_t,3>> m_shutter_config;
+        void print_shutter_config(){
+        std::cout<< "system setup with" << All_shutters.size() << "shutters" <<  std::endl;
+        std::cout << "shutter  " << "button pin   " << "relaypin1  " << "relaypin2" << std::endl;
+        for(int i = 0 ; i < All_shutters.size(); i++){
+            std::cout <<"     " << i+1 <<"        "<< m_shutter_config[i][0] <<"            "<< m_shutter_config[i][1] <<"      "<< m_shutter_config[i][2]<< std::endl;
+        }
+    }
     public:
-    Shutter_system(std::vector<std::array<uint32_t,3>> shutter_config){
-        for(int i = 0 ; i < shutter_config.size(); i++){
-            shutter* shutter_ptr = new shutter(shutter_config[i]);
+    Shutter_system(std::vector<std::array<uint32_t,3>> shutter_config_input){
+        m_shutter_config = shutter_config_input;
+        for(int i = 0 ; i < m_shutter_config.size(); i++){
+            shutter* shutter_ptr = new shutter(m_shutter_config[i]);
             All_shutters.push_back(shutter_ptr);
         }
-    std::cout<< "system setup with" << All_shutters.size() << "shutters" <<  std::endl;
-    std::cout << "shutter  " << "button pin   " << "relaypin1  " << "relaypin2" << std::endl;
-    for(int i = 0 ; i < All_shutters.size(); i++){
-        std::cout <<"     " << i+1 <<"        "<< shutter_config[i][0] <<"            "<< shutter_config[i][1] <<"      "<< shutter_config[i][2]<< std::endl;
+        print_shutter_config();
     }
-    }
+    
 
+
+    ~Shutter_system(){
+        for(int i = 0 ; i < All_shutters.size(); i++){
+            delete All_shutters[i];
+        }
+    }
 };
 
 #endif  //ifndef ROLLERSHUTTER_H
